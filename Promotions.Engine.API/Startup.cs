@@ -1,16 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using PromotionsEngine.API.Repositories;
+using PromotionsEngine.API.Services;
 
-namespace Promotions.Engine.API
+namespace PromotionsEngine
 {
     public class Startup
     {
@@ -25,20 +20,16 @@ namespace Promotions.Engine.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IPromotionService, PromotionService>();
+            services.AddTransient<IPromotionRepository, PromotionRepository>();
+            services.AddScoped<ICartItemService, CartItemService>();
+            services.AddTransient<ICartItemRepository, CartItemRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseRouting();
-
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
